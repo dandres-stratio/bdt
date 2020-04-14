@@ -2,7 +2,7 @@
 
 Only listing significant user-visible, not internal code cleanups and minor bug fixes.
 
-## 0.15.0 (upcoming)
+## 0.15.0 (April 14, 2020)
 
 * [GS-1965] Set warning message instead of exception when gosec variables are not defined
 * [PIT-479] Check services installed in folder
