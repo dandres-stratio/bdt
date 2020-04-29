@@ -2,7 +2,7 @@
 
 Only listing significant user-visible, not internal code cleanups and minor bug fixes.
 
-## 0.16.0 (upcoming)
+## 0.16.0 (April 29, 2020)
 
 * [PIT-475]Log management(in less than)
 * [QATM-3283] Fix step to scale services
