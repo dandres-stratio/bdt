@@ -2,7 +2,7 @@
 
 Only listing significant user-visible, not internal code cleanups and minor bug fixes.
 
-## 0.16.1 (upcoming)
+## 0.16.1 (May 07, 2020)
 
 * [PIT-523] Fix install step for EOS 0.23.X and Universe 0.4.22
 
