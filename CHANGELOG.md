@@ -2,6 +2,10 @@
 
 Only listing significant user-visible, not internal code cleanups and minor bug fixes.
 
+## 0.17.1 (upcoming)
+
+* [QATM-3284] Fix loop replacement in datatables
+
 ## 0.17.0 (May 25, 2020)
 
 * [QATM-3333] Fix user management to connect to LDAP

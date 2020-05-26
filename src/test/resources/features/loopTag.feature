@@ -60,3 +60,19 @@ Feature: Feature used in testing loop tag aspect
   @loop(LOCAL_VAR_LIST,VAR_NAME)
   Scenario: write <VAR_NAME> a file the final result of the scenario.
     Given I run 'echo <VAR_NAME> >> testOutput.txt' locally
+
+  @loop(AGENT_LIST,VAR_NAME)
+  Scenario: Loop replacement in datatable
+    Given I create file 'testDatatableReplace<VAR_NAME>.json' based on 'schemas/simple1.json' as 'json' with:
+      | $.a | REPLACE | <VAR_NAME>     | string   |
+    Given I run 'cat target/test-classes/testDatatableReplace<VAR_NAME>.json' locally
+    Then the command output contains '{"a":"<VAR_NAME>"}'
+    And I run 'rm -Rf target/test-classes/testDatatableReplace<VAR_NAME>.json' locally
+
+  @loop(LOCAL_VAR_LIST,VAR_NAME)
+  Scenario: Loop replacement in datatable (local variable)
+    Given I create file 'testDatatableReplace<VAR_NAME>.json' based on 'schemas/simple1.json' as 'json' with:
+      | $.a | REPLACE | <VAR_NAME>     | string   |
+    Given I run 'cat target/test-classes/testDatatableReplace<VAR_NAME>.json' locally
+    Then the command output contains '{"a":"<VAR_NAME>"}'
+    And I run 'rm -Rf target/test-classes/testDatatableReplace<VAR_NAME>.json' locally

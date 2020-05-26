@@ -18,10 +18,7 @@ package com.stratio.qa.cucumber.converter;
 
 import com.stratio.qa.utils.ThreadProperty;
 import gherkin.events.PickleEvent;
-import gherkin.pickles.Pickle;
-import gherkin.pickles.PickleLocation;
-import gherkin.pickles.PickleStep;
-import gherkin.pickles.PickleTag;
+import gherkin.pickles.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -191,7 +188,9 @@ public class LoopConverter {
         List<PickleStep> newSteps = new ArrayList<>();
         for (PickleStep step : steps) {
             String newStepText = step.getText().replaceAll("<" + paramReplace + ">", elem).replaceAll("<" + paramReplace + ".id>", String.valueOf(numElem));
-            newSteps.add(new PickleStep(newStepText, step.getArgument(), step.getLocations()));
+            List<Argument> argumentListReplaced = replaceArguments("<" + paramReplace + ">", elem, step.getArgument());
+            argumentListReplaced = replaceArguments("<" + paramReplace + ".id>", elem, argumentListReplaced);
+            newSteps.add(new PickleStep(newStepText, argumentListReplaced, step.getLocations()));
         }
         String newScenarioname = name.replaceAll("<" + paramReplace + ">", elem).replaceAll("<" + paramReplace + ".id>", String.valueOf(numElem));
         Pickle pickle = new Pickle(newScenarioname, language, newSteps, tags, locations);
@@ -202,10 +201,12 @@ public class LoopConverter {
         List<PickleStep> newSteps = new ArrayList<>();
         for (PickleStep step : steps) {
             String newStepText = step.getText();
+            List<Argument> argumentListReplaced = step.getArgument();
             for (int i = 0; i < keys.length; i++) {
                 newStepText = newStepText.replaceAll("<" + keys[i] + ">", values[i]);
+                argumentListReplaced = replaceArguments("<" + keys[i] + ">", values[i], argumentListReplaced);
             }
-            newSteps.add(new PickleStep(newStepText, step.getArgument(), step.getLocations()));
+            newSteps.add(new PickleStep(newStepText, argumentListReplaced, step.getLocations()));
         }
         String newScenarioname = name;
         for (int i = 0; i < keys.length; i++) {
@@ -213,5 +214,29 @@ public class LoopConverter {
         }
         Pickle pickle = new Pickle(newScenarioname, language, newSteps, tags, locations);
         return new PickleEvent(uri, pickle);
+    }
+
+    private static List<Argument> replaceArguments(String textToReplace, String textReplaced, List<Argument> argumentsList) {
+        List<Argument> argumentListReplaced = new ArrayList<>();
+        for (Argument argument : argumentsList) {
+            if (argument instanceof PickleTable) {
+                PickleTable pickleTable = (PickleTable) argument;
+                List<PickleRow> pickleRowList = new ArrayList<>(pickleTable.getRows());
+                for (int r = 0; r < pickleRowList.size(); r++) {
+                    PickleRow pickleRow = pickleRowList.get(r);
+                    List<PickleCell> pickleCellList = new ArrayList<>(pickleRow.getCells());
+                    for (int c = 0; c < pickleCellList.size(); c++) {
+                        PickleCell pickleCell = pickleCellList.get(c);
+                        pickleCellList.set(c, new PickleCell(pickleCell.getLocation(), pickleCell.getValue().replaceAll(textToReplace, textReplaced)));
+                    }
+                    pickleRowList.set(r, new PickleRow(pickleCellList));
+                }
+                pickleTable = new PickleTable(pickleRowList);
+                argumentListReplaced.add(pickleTable);
+            } else {
+                argumentListReplaced.add(argument);
+            }
+        }
+        return argumentListReplaced;
     }
 }
