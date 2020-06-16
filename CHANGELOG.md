@@ -2,7 +2,7 @@
 
 Only listing significant user-visible, not internal code cleanups and minor bug fixes.
 
-## 0.17.2 (upcoming)
+## 0.17.2 (June 16, 2020)
 
 * [PIT-568] Fix secrets creation/deletion when passing optional path
 
