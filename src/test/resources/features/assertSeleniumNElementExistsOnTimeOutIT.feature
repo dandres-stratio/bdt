@@ -4,22 +4,22 @@ Feature: Checks if in less than N seconds, checking every N seconds, web element
   Scenario: Use Google and id
     Given My app is running in 'www.google.es'
     When I browse to '/'
-    Then in less than '5' seconds, checking each '1' seconds, '1' elements exists with 'id:cst'
+    Then in less than '5' seconds, checking each '1' seconds, '1' elements exists with 'id:searchform'
 
   Scenario: Use Google and name
     Given My app is running in 'www.google.es'
     When I browse to '/'
-    Then in less than '5' seconds, checking each '1' seconds, '1' elements exists with 'name:q'
+    Then in less than '5' seconds, checking each '1' seconds, '1' elements exists with 'name:f'
 
   Scenario: Use Google and xpath
     Given My app is running in 'www.google.es'
     When I browse to '/'
-    Then in less than '5' seconds, checking each '1' seconds, '1' elements exists with 'xpath://*[@id="cst"]'
+    Then in less than '5' seconds, checking each '1' seconds, '1' elements exists with 'xpath://*[@id="searchform"]'
 
   Scenario: Use Google and css
     Given My app is running in 'www.google.es'
     When I browse to '/'
-    Then in less than '5' seconds, checking each '1' seconds, '1' elements exists with 'css:#cst'
+    Then in less than '5' seconds, checking each '1' seconds, '1' elements exists with 'css:#searchform'
 
   Scenario: Use Metabase and css
     Given My app is running in 'www.metabase.com'
