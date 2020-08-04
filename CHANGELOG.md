@@ -2,7 +2,7 @@
 
 Only listing significant user-visible, not internal code cleanups and minor bug fixes.
 
-## 0.18.0 (upcoming)
+## 0.18.0 (August 04, 2020)
 
 * [ROCK-1999] Add clients, models and Marathon spec
 * [ROCK-1999] Add some cct and marathon steps
