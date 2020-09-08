@@ -2,7 +2,7 @@
 
 Only listing significant user-visible, not internal code cleanups and minor bug fixes.
 
-## 0.19.0 (upcoming)
+## 0.19.0 (September 08, 2020)
 
 * Bump log4j-core, log4j-slf4j-impl and log4j-1.2-api from 2.0 to 2.13.2
 * [GS-2354] Add feature to convert provided date into timestamp
