@@ -102,8 +102,6 @@ public class CommonG {
 
     private HttpResponse response;
 
-    private List<Cookie> cookies = new ArrayList<Cookie>();
-
     private ResultSet previousCassandraResults;
 
     private DBCursor previousMongoResults;
@@ -1910,11 +1908,11 @@ public class CommonG {
     }
 
     public List<Cookie> getCookies() {
-        return cookies;
+        return CookiesUtils.getCookies();
     }
 
     public void setCookies(List<Cookie> cookies) {
-        this.cookies = cookies;
+        CookiesUtils.setCookies(cookies);
     }
 
 

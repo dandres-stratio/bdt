@@ -33,7 +33,7 @@ public class Container {
     private String hostname;
 
     @JsonProperty("network_infos")
-    private List<Map<String, String>> networkInfos;
+    private List<Map<String, Object>> networkInfos;
 
     public String getType() {
         return type;
@@ -51,7 +51,7 @@ public class Container {
         return hostname;
     }
 
-    public List<Map<String, String>> getNetworkInfos() {
+    public List<Map<String, Object>> getNetworkInfos() {
         return networkInfos;
     }
 }

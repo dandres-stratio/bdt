@@ -209,9 +209,13 @@ public class CCTSpec extends BaseGSpec {
         lastLinesToRead = lastLinesToRead == null ? -1 : lastLinesToRead;
         String logOfTask = null;
         for (int x = 0; x <= timeout; x += wait) {
-            logOfTask = getLog(logType, lastLinesToRead, service, taskNameOrID, 0, null, nameOrId.equals("ID"));
-            if (logOfTask != null && logOfTask.contains(logToCheck)) {
-                break;
+            try {
+                logOfTask = getLog(logType, lastLinesToRead, service, taskNameOrID, 0, null, nameOrId.equals("ID"));
+                if (logOfTask != null && logOfTask.contains(logToCheck)) {
+                    break;
+                }
+            } catch (Exception e) {
+
             }
             commonspec.getLogger().info(logToCheck + " not found after " + x + " seconds");
             if (x < timeout) {
@@ -242,14 +246,18 @@ public class CCTSpec extends BaseGSpec {
         commonspec.setCCTConnection(null, null);
         String logOfTask = null;
         for (int x = 0; x <= timeout; x += wait) {
-            logOfTask = getLog(logType, lastLinesToRead, service, taskNameOrID, 0, null, nameOrId.equals("ID"));
-            if (logOfTask != null) {
-                Files.write(Paths.get(System.getProperty("user.dir") + "/target/test-classes/log.txt"), logOfTask.getBytes());
-                commonspec.runLocalCommand("cat target/test-classes/log.txt | " + modifyingCommand);
-                commonspec.getLogger().debug("Log result modified =  " + commonspec.getCommandResult());
-                if (commonspec.getCommandResult().contains(logToCheck)) {
-                    break;
+            try {
+                logOfTask = getLog(logType, lastLinesToRead, service, taskNameOrID, 0, null, nameOrId.equals("ID"));
+                if (logOfTask != null) {
+                    Files.write(Paths.get(System.getProperty("user.dir") + "/target/test-classes/log.txt"), logOfTask.getBytes());
+                    commonspec.runLocalCommand("cat target/test-classes/log.txt | " + modifyingCommand);
+                    commonspec.getLogger().debug("Log result modified =  " + commonspec.getCommandResult());
+                    if (commonspec.getCommandResult().contains(logToCheck)) {
+                        break;
+                    }
                 }
+            } catch (Exception e) {
+
             }
             commonspec.getLogger().info(logToCheck + " not found after " + x + " seconds");
             if (x < timeout) {
@@ -285,11 +293,27 @@ public class CCTSpec extends BaseGSpec {
             TaskStatus expectedTaskStatus = taskState == null && !isTaskId ? TaskStatus.RUNNING : null;
             logPath = getLogPathFromMarathonServices(logType, service, taskNameOrID, expectedTaskStatus, position, isTaskId);
         }
+        if (isTaskId && logPath == null) {
+            logPath = generateMesosLogPath(taskNameOrID, logType);
+        }
         if (logPath == null) {
             return null;
         }
         commonspec.getLogger().debug("Log path: " + logPath);
         return readLogsFromMesos(logPath, lastLinesToRead);
+    }
+
+    private String generateMesosLogPath(String taskId, String logType) {
+        try {
+            MesosTask mesosTask = mesosApiClient.getMesosTask(taskId).getTasks().get(0);
+            String slaveId = mesosTask.getSlaveId();
+            String frameworkId = mesosTask.getFrameworkId();
+            String containerId = ((LinkedHashMap<String, String>) mesosTask.getStatuses().get(0).getContainerStatus().get("container_id")).get("value");
+            return "/agent/" + slaveId + "/files/read?path=/var/lib/mesos/slave/slaves/" + slaveId + "/frameworks/" + frameworkId + "/executors/" + taskId + "/runs/" + containerId + "/" + logType;
+        } catch (Exception e) {
+            commonspec.getLogger().warn("Error generating mesos log path: " + e.toString());
+        }
+        return null;
     }
 
     /**
@@ -369,7 +393,7 @@ public class CCTSpec extends BaseGSpec {
         Future<Response> response = null;
         response = commonspec.generateRequest("GET", false, null, null, path, "", null);
         if (response.get().getStatusCode() != 200) {
-            throw new Exception("Request failed to endpoint: " + path + " with status code: " + commonspec.getResponse().getStatusCode());
+            throw new Exception("Request failed to endpoint: " + path + " with status code: " + response.get().getStatusCode());
         }
         JSONObject offSetJson = new JSONObject(response.get().getResponseBody());
         int offSet = offSetJson.getInt("offset");
