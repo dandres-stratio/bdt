@@ -2,7 +2,7 @@
 
 Only listing significant user-visible, not internal code cleanups and minor bug fixes.
 
-## 0.19.1 (upcoming)
+## 0.19.1 (September 16, 2020)
 
 * [QATM-3474] Generate path log manually if CCT request fails
 
