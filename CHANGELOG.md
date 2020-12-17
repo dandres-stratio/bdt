@@ -2,7 +2,7 @@
 
 Only listing significant user-visible, not internal code cleanups and minor bug fixes.
 
-## 0.20.0 (upcoming)
+## 0.20.0 (December 17, 2020)
 
 * [CROSSDATA-2740] Fix get service/container port from Marathon API in DCOS 1.8
 * [PQA-40] retrieve ssh user from descriptor
