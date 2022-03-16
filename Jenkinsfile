@@ -1,19 +1,11 @@
-@Library('libpipelines@master') _
+@Library('libpipelines') _
 
 hose {
     EMAIL = 'qa'
-    LANG = 'java'
-    MODULE = 'bdt'
-    REPOSITORY = 'github.com/bdt'
-    SLACKTEAM = 'stratioqa'
     DEVTIMEOUT = 30
     RELEASETIMEOUT = 30
-    MAXITRETRIES = 2
-    FOSS = true
     BUILDTOOL = 'maven'
-    BUILDTOOLVERSION = '3.5.0'
-    FORCETICKETONPRS = true
-
+    
     ITSERVICES = [
         ['ZOOKEEPER': [
            'image': 'zookeeper:3.5.7',
@@ -115,10 +107,9 @@ hose {
         doPackage(config)
     
         parallel(DOC: {
-            doDoc(config)
+            // doDoc(config)
         }, QC: {
             doStaticAnalysis(config)
-	    doCoverallsAnalysis(config)
         }, DEPLOY: {
             doDeploy(config)
         }, failFast: config.FAILFAST)
