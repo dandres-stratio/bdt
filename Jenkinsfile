@@ -5,6 +5,7 @@ hose {
     DEVTIMEOUT = 30
     RELEASETIMEOUT = 30
     BUILDTOOL = 'maven'
+    BUILDTOOL_IMAGE = "maven:3.8.4-openjdk-8"
     
     ITSERVICES = [
         ['ZOOKEEPER': [
